@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:unsplash_client/unsplash_client.dart';
 import 'package:dio/dio.dart';
+import 'package:wallpaper/model.dart';
 
 void main() {
   debugPrint('Start of Main Activity');
@@ -35,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final baseUrl = "https://api.unsplash.com/photos/";
   final authorizationId = "3O-0lx3tK8EB-5FUQnneiHneMwC0waml_N4jrNvv2pQ";
 
-  Future getUnsplashApi() async {
+  Future<Unsplash> getUnsplashApi() async {
     Dio dio = new Dio();
     debugPrint(dio.toString());
     var response = await dio.get(baseUrl,
@@ -43,7 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Options(headers: {"Authorization": "Client-ID $authorizationId"}
             ));
 
-    return response.data.toString();
+    final jsonUnsplash = jsonDecode(response.data);
+
+    return Unsplash.fromJson(jsonUnsplash);
   }
 
   // Future<dynamic> showPhotoDetails;
@@ -80,19 +85,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 // Fetch Random Photo
                 debugPrint('Fetch Random Photo');
                 await getUnsplashApi().then((value) {
-                  debugPrint(value);
+                  debugPrint(value.results.first.id);
                 });
               },
               icon: Icon(Icons.photo_rounded),
               label: Text('Get Random Photo'),
             ),
-            FutureBuilder(
-                // future: showPhotoDetails,
+            FutureBuilder<Unsplash>(
+                future: getUnsplashApi(),
                 builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final photo = snapshot.data;
-                debugPrint('Future Builder Photo Details: ${photo.id}');
-                return Text('Get Data: ${photo.id}');
+                debugPrint('Future Builder Photo Details: ${photo.results.first.id}');
+                return Text('Get Data: ${photo.results.first.id}');
               } else {
                 debugPrint('Future Builder: Snapshot Error');
                 return Text(snapshot.error.toString());

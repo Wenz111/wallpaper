@@ -26,6 +26,7 @@ dependencies:
   google_fonts: ^1.1.2
   hexcolor: ^2.0.1
   dio: ^3.0.10
+  dataclass: ^0.5.0+1
 #  unsplash_client: ^1.0.1+2
 
 
@@ -36,6 +37,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  dataclass_generator: ^0.5.0+1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
